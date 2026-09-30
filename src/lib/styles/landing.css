@@ -1,4 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Jua&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
+
+@font-face {
+  font-family: 'Jua';
+  src: url('/fonts/jua.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 /* Haven's extended Jua subset includes the Hungarian ő missing from Google Fonts. */
 @font-face {
@@ -96,7 +104,8 @@
 .landing-title span {
   padding-bottom: .3em;
   color: white;
-  font-family: 'Darumadrop One', 'Jua Extras', 'Jua', sans-serif;
+  /* Use Jua for the entire name, including its matching Hungarian subset. */
+  font-family: 'Jua Extras', 'Jua', sans-serif;
   font-size: clamp(4rem, 7.5vw, 7.5rem);
   font-weight: 400;
   line-height: 1;

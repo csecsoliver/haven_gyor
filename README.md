@@ -116,8 +116,9 @@ node --env-file-if-exists=.env build
 Serve production over HTTPS. Set `ORIGIN` to your public origin and keep the
 admin token secret. The application depends on original Haven images and
 Hack Club assets served remotely; their availability is outside this app.
-The extended Jua font subset from Haven is served locally so Hungarian `ő`
-renders correctly; its SIL Open Font License is included in `static/fonts/OFL.txt`.
+Jua and Haven's extended Jua subset are served locally, and the entire city
+name uses Jua so Hungarian `ő` matches the other letters. Their SIL Open Font
+License is included in `static/fonts/OFL.txt`.
 Upstream FAQ content is retained as requested: “we” in quoted answers refers
 to the original Haven organizers, not this site's independent maintainer.
 Confirm the date/year and local arrangements before promoting the event.

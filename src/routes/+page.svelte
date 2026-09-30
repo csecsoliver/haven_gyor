@@ -74,11 +74,7 @@
   <section id="schedule" class="section schedule">
     <div class="section-heading"><p class="eyebrow">A weekend well spent</p><h2>{content.schedule.heading}</h2></div>
     {#if content.schedule.days.length}
-    {#if content.schedule.days.length}
     <div class="schedule-days">{#each content.schedule.days as day}<article class="schedule-day"><h3>{day.day}</h3><ol>{#each day.items as item}<li><time>{item.time}</time><div><h4>{item.title}</h4>{#if item.body}<p>{item.body}</p>{/if}</div></li>{/each}</ol></article>{/each}</div>
-    {:else}
-    <div class="section-heading"><h3>{content.schedule.tbd.title}</h3><p>{content.schedule.tbd.body}</p></div>
-    {/if}
     {:else}
     <div class="section-heading"><h3>{content.schedule.tbd.title}</h3><p>{content.schedule.tbd.body}</p></div>
     {/if}

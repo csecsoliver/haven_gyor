@@ -1,0 +1,294 @@
+@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Jua&display=swap');
+
+/* Haven's extended Jua subset includes the Hungarian ő missing from Google Fonts. */
+@font-face {
+  font-family: 'Jua Extras';
+  src: url('/fonts/jua-extras.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+60, U+A1-AC, U+AE-17E, U+18F, U+192, U+1CD-1CE, U+1D4,
+    U+218-21B, U+237, U+259, U+2C6-2CC, U+2D8-2DD, U+1E9E, U+1EA0-1EF9,
+    U+2010, U+2012-2015, U+2018-201A, U+201C-201E, U+2020-2022, U+2026,
+    U+2030, U+2032-2033, U+2039-203A, U+2044, U+20AC, U+20B9, U+2122,
+    U+2212, U+2248, U+2260, U+2264-2265;
+}
+
+/* The landing uses the original white wordmark and autumn palette. */
+.landing-header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 clamp(1.25rem, 4vw, 4rem);
+}
+
+.landing-header nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 3rem);
+  padding-top: 1.5rem;
+}
+
+.landing-header nav a {
+  color: #fff3c6;
+  font-family: 'Darumadrop One', 'Jua Extras', 'Jua', sans-serif;
+  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+  line-height: 1.2;
+  text-decoration: none;
+  text-shadow: 0 2px 5px #793c28;
+}
+
+.landing-header nav a:hover {
+  color: white;
+}
+
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: max(780px, 100svh);
+  padding: 110px clamp(2rem, 7vw, 8rem) 110px;
+  overflow: hidden;
+  color: white;
+  background: #b8c220 url('https://haven.hackclub.com/images/hero/hero-bg-no-sticky-tree.webp') center top / cover no-repeat;
+}
+
+.landing-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* Gentle shade preserves the illustration while making white copy readable. */
+  background: linear-gradient(90deg, #572b203d, #572b2015 65%, transparent);
+}
+
+.landing-hero::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  z-index: 3;
+  pointer-events: none;
+  border: 2px solid #fff3c666;
+  border-radius: 3px;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 760px);
+}
+
+.landing-title {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(.5rem, 2vw, 2rem);
+  margin: 0 0 1.5rem;
+}
+
+.landing-title img {
+  width: clamp(220px, 28vw, 430px);
+  height: auto;
+  filter: drop-shadow(0 3px 12px #6a321528);
+}
+
+.landing-title span {
+  padding-bottom: .3em;
+  color: white;
+  font-family: 'Darumadrop One', 'Jua Extras', 'Jua', sans-serif;
+  font-size: clamp(4rem, 7.5vw, 7.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.025em;
+  text-shadow: 0 3px 10px #793c2866;
+}
+
+.landing-tagline {
+  margin: 0 0 1.6rem 1rem;
+  font-family: 'Jua Extras', 'Jua', sans-serif;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  text-shadow: 0 2px 5px #633b26;
+}
+
+.landing-tagline p {
+  line-height: 1.4;
+}
+
+.landing-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  margin-left: 1rem;
+  padding: .9rem 1.8rem;
+  border: 2px solid #ffe9b7;
+  border-radius: 14px;
+  background: #ed5615;
+  box-shadow: 0 4px 0 #953516;
+  color: white;
+  font-family: 'Jua Extras', 'Jua', sans-serif;
+  font-size: 1.7rem;
+  text-decoration: none;
+  transition: transform .15s, background .15s;
+}
+
+.landing-signup:hover {
+  transform: translateY(-2px);
+  background: #cf430c;
+  color: white;
+}
+
+.landing-referral {
+  margin: 1rem 0 0 1rem;
+  font-size: .85rem;
+  text-shadow: 0 1px 4px #4c381b;
+}
+
+.landing-referral a,
+.landing-referral a:hover {
+  color: white;
+}
+
+.landing-disclaimer {
+  width: fit-content;
+  margin: 1.5rem 0 0 1rem;
+  padding: .65rem 1rem;
+  border-left: 2px solid #ffe382;
+  border-radius: 0 8px 8px 0;
+  background: #3e331cc2;
+  color: #fff8e8;
+  font-size: .85rem;
+  line-height: 1.6;
+}
+
+.landing-mascot {
+  position: absolute;
+  right: clamp(2rem, 8vw, 10rem);
+  bottom: 13%;
+  z-index: 1;
+  width: clamp(150px, 23vw, 330px);
+  height: auto;
+  transform: rotate(5deg);
+  filter: drop-shadow(0 15px 12px #4e481c40);
+  pointer-events: none;
+}
+
+.landing-scroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .2rem;
+  transform: translateX(-50%);
+  color: white;
+  font-family: 'Jua Extras', 'Jua', sans-serif;
+  font-size: 1rem;
+  text-decoration: none;
+  text-shadow: 0 2px 4px #595c17;
+}
+
+.landing-scroll span {
+  font-size: 1.7rem;
+}
+
+.landing-scroll:hover {
+  color: #fff3c6;
+}
+
+.landing-header a:focus-visible,
+.landing-hero a:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 6px;
+}
+
+@media (max-width: 1000px) {
+  .landing-hero {
+    padding-inline: 6vw;
+  }
+
+  .landing-mascot {
+    right: 3%;
+    width: 21vw;
+    bottom: 15%;
+  }
+}
+
+@media (max-width: 700px) {
+  .landing-header {
+    padding-inline: 1.25rem;
+  }
+
+  .landing-header nav {
+    gap: 1rem;
+    padding-top: 1.1rem;
+  }
+
+  .landing-header nav a {
+    font-size: 1.35rem;
+  }
+
+  .landing-hero {
+    min-height: max(760px, 100svh);
+    padding: 100px 1.75rem 100px;
+    text-align: center;
+    background-position: 42% top;
+  }
+
+  .landing-hero::before {
+    background: linear-gradient(#54280f1a, #3e341b33);
+  }
+
+  .landing-hero::after {
+    inset: 8px;
+  }
+
+  .landing-content {
+    width: 100%;
+  }
+
+  .landing-title {
+    justify-content: center;
+    align-items: center;
+    gap: .6rem;
+  }
+
+  .landing-title img {
+    width: 56%;
+    max-width: 260px;
+  }
+
+  .landing-title span {
+    padding: .4em 0 0;
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+
+  .landing-tagline {
+    margin-left: 0;
+    font-size: 1.4rem;
+  }
+
+  .landing-signup {
+    margin-left: 0;
+    padding: .85rem 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .landing-referral {
+    margin-left: 0;
+    font-size: .8rem;
+  }
+
+  .landing-disclaimer {
+    margin: 1.5rem auto 0;
+    text-align: left;
+    font-size: .8rem;
+  }
+
+  .landing-mascot {
+    display: none;
+  }
+}

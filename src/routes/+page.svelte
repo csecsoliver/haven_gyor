@@ -1,5 +1,6 @@
 <script lang="ts">
   import RichText from '$lib/components/RichText.svelte';
+  import '$lib/styles/landing.css';
   import type { SiteContent } from '$lib/schema';
 
   export let data: { content: SiteContent };
@@ -19,28 +20,35 @@
 </svelte:head>
 
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <a class="hackclub-flag" href="https://hackclub.com/" aria-label="Hack Club website">
-    <img src="https://assets.hackclub.com/flag-orpheus-top.svg" alt="Hack Club" width="150" height="80" />
-  </a>
+<header class="landing-header">
   <nav aria-label="Main navigation">
+    <a href={referral}>{content.nav.signup} <span aria-hidden="true">↗</span></a>
     <a href="#about">{content.nav.about}</a>
     {#if content.faq.items.length}<a href="#faq">{content.nav.faq}</a>{/if}
-    <a class="button small" href={referral}>{content.nav.signup} <span aria-hidden="true">↗</span></a>
   </nav>
 </header>
 
 <main id="main">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-content">
-      <p class="eyebrow">A little adventure. A whole lot of possibility.</p>
-      <h1 id="hero-title"><img src={asset('/images/haven-logo-color.webp')} alt="Haven" /><span>Győr</span></h1>
-      <div class="tagline">{#each content.tagline as line}<p>{line}</p>{/each}</div>
-      <a class="button hero-cta" href={referral}>{content.hero.signup.button} <span aria-hidden="true">↗</span></a>
-      <p class="referral-note">Sign up through our referral link · haven.hack.club/150</p>
-      <div class="independent-notice"><strong>Independent community website for Győr.</strong> This website is not run by Hack Club HQ. Hack Club branding identifies the Haven community; signup happens on the external Haven site through our referral link.</div>
-      <a class="scroll-link" href="#about">{content.hero.scrollLabel} <span aria-hidden="true">↓</span></a>
+  <section class="landing-hero" aria-labelledby="hero-title">
+    <div class="landing-content">
+      <h1 id="hero-title" class="landing-title">
+        <img src={asset('/images/logo.webp')} alt="Hack Club Haven" width="762" height="491" fetchpriority="high" />
+        <span>Győr</span>
+      </h1>
+      <div class="landing-tagline">{#each content.tagline as line}<p>{line}</p>{/each}</div>
+      <a class="landing-signup" href={referral}>
+        {content.hero.signup.button} <span aria-hidden="true">↗</span>
+      </a>
+      <p class="landing-referral">Referral signup · <a href={referral}>haven.hack.club/150</a></p>
+      <p class="landing-disclaimer">
+        Independent Győr community website.<br />
+        <strong>Not run by Hack Club HQ.</strong>
+      </p>
     </div>
+    <img class="landing-mascot" src={asset('/images/hedgehog.webp')} alt="" aria-hidden="true" width="600" height="600" />
+    <a class="landing-scroll" href="#about">
+      {content.hero.scrollLabel}<span aria-hidden="true">↓</span>
+    </a>
   </section>
 
   <section id="about" class="section about">

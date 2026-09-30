@@ -1,7 +1,7 @@
 # Independent Haven Győr
 
 A small SvelteKit / PostgreSQL website inspired by [Haven Győr](https://haven.hackclub.com/gyor).
-The Hack Club flag and Győr name are retained, but prominent notices identify this
+The original white Hack Club Haven wordmark and Győr name are retained, but prominent notices identify this
 as an **independently maintained site, not run by Hack Club HQ**.
 Every signup button goes to **https://haven.hack.club/150**, explicitly labeled
 as a referral link. This app does not collect signup emails.
@@ -116,6 +116,8 @@ node --env-file-if-exists=.env build
 Serve production over HTTPS. Set `ORIGIN` to your public origin and keep the
 admin token secret. The application depends on original Haven images and
 Hack Club assets served remotely; their availability is outside this app.
+The extended Jua font subset from Haven is served locally so Hungarian `ő`
+renders correctly; its SIL Open Font License is included in `static/fonts/OFL.txt`.
 Upstream FAQ content is retained as requested: “we” in quoted answers refers
 to the original Haven organizers, not this site's independent maintainer.
 Confirm the date/year and local arrangements before promoting the event.

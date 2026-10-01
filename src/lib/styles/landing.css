@@ -56,8 +56,8 @@
   isolation: isolate;
   display: flex;
   align-items: center;
-  min-height: max(780px, 100svh);
-  padding: 110px clamp(2rem, 7vw, 8rem) 110px;
+  min-height: 100svh;
+  padding: clamp(70px, 10svh, 110px) clamp(2rem, 7vw, 8rem) clamp(80px, 12svh, 110px);
   overflow: hidden;
   color: white;
   background: #b8c220 url('https://haven.hackclub.com/images/hero/hero-bg-no-sticky-tree.webp') center top / cover no-repeat;
@@ -92,11 +92,11 @@
   display: flex;
   align-items: flex-end;
   gap: clamp(.5rem, 2vw, 2rem);
-  margin: 0 0 1.5rem;
+  margin: 0 0 clamp(.5rem, 2svh, 1.5rem);
 }
 
 .landing-title img {
-  width: clamp(220px, 28vw, 430px);
+  width: min(clamp(220px, 28vw, 430px), 32svh);
   height: auto;
   filter: drop-shadow(0 3px 12px #6a321528);
 }
@@ -106,7 +106,7 @@
   color: white;
   /* Use Jua for the entire name, including its matching Hungarian subset. */
   font-family: 'Jua Extras', 'Jua', sans-serif;
-  font-size: clamp(4rem, 7.5vw, 7.5rem);
+  font-size: min(clamp(4rem, 7.5vw, 7.5rem), 10svh);
   font-weight: 400;
   line-height: 1;
   letter-spacing: -.025em;
@@ -114,7 +114,7 @@
 }
 
 .landing-tagline {
-  margin: 0 0 1.6rem 1rem;
+  margin: 0 0 clamp(.5rem, 2svh, 1.6rem) 1rem;
   font-family: 'Jua Extras', 'Jua', sans-serif;
   font-size: clamp(1.4rem, 2.2vw, 2rem);
   text-shadow: 0 2px 5px #633b26;
@@ -149,7 +149,7 @@
 }
 
 .landing-referral {
-  margin: 1rem 0 0 1rem;
+  margin: clamp(.5rem, 2svh, 1rem) 0 0 1rem;
   font-size: .85rem;
   text-shadow: 0 1px 4px #4c381b;
 }
@@ -161,7 +161,7 @@
 
 .landing-disclaimer {
   width: fit-content;
-  margin: 1.5rem 0 0 1rem;
+  margin: clamp(.5rem, 2svh, 1.5rem) 0 0 1rem;
   padding: .65rem 1rem;
   border-left: 2px solid #ffe382;
   border-radius: 0 8px 8px 0;
@@ -176,7 +176,7 @@
   right: clamp(2rem, 8vw, 10rem);
   bottom: 13%;
   z-index: 1;
-  width: clamp(150px, 23vw, 330px);
+  width: min(clamp(150px, 23vw, 330px), 35svh);
   height: auto;
   transform: rotate(5deg);
   filter: drop-shadow(0 15px 12px #4e481c40);
@@ -221,7 +221,7 @@
 
   .landing-mascot {
     right: 3%;
-    width: 21vw;
+    width: min(21vw, 35svh);
     bottom: 15%;
   }
 }
@@ -241,8 +241,7 @@
   }
 
   .landing-hero {
-    min-height: max(760px, 100svh);
-    padding: 100px 1.75rem 100px;
+    padding-inline: 1.75rem;
     text-align: center;
     background-position: 42% top;
   }
@@ -267,12 +266,12 @@
 
   .landing-title img {
     width: 56%;
-    max-width: 260px;
+    max-width: min(260px, 30svh);
   }
 
   .landing-title span {
     padding: .4em 0 0;
-    font-size: clamp(3rem, 12vw, 5rem);
+    font-size: min(clamp(3rem, 12vw, 5rem), 10svh);
   }
 
   .landing-tagline {
@@ -292,7 +291,7 @@
   }
 
   .landing-disclaimer {
-    margin: 1.5rem auto 0;
+    margin: clamp(.5rem, 2svh, 1.5rem) auto 0;
     text-align: left;
     font-size: .8rem;
   }
@@ -300,4 +299,19 @@
   .landing-mascot {
     display: none;
   }
+}
+
+@media (min-width: 600px) and (max-height: 540px) {
+  .landing-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+    align-items: start;
+  }
+
+  .landing-title { grid-column: 1; grid-row: 1 / 3; }
+  .landing-tagline { grid-column: 1; grid-row: 3; }
+  .landing-signup { grid-column: 2; grid-row: 1; justify-self: start; }
+  .landing-referral { grid-column: 2; grid-row: 2; }
+  .landing-disclaimer { grid-column: 2; grid-row: 3; }
 }

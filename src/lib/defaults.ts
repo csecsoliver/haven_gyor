@@ -3,7 +3,7 @@ import type { SiteContent } from '$lib/schema';
 export const defaults: SiteContent = {
   meta: {
     title: 'Haven — Győr',
-    description: 'An independently organized game jam for teens in Győr. Make games, meet friends, and learn something new. Not run by Hack Club HQ.',
+    description: 'An game jam for teens in Győr. Make games, meet friends, and learn something new. Run by Haven Győr, endorsed and sponsored by Hack Club.',
     image: '/images/haven-logo-color.webp'
   },
   nav: { signup: 'Sign up', about: 'About', faq: 'FAQ' },

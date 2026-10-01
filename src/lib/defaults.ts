@@ -59,7 +59,7 @@ export const defaults: SiteContent = {
   },
   schedule: {
     heading: 'What happens on the day?',
-    tbd: { title: 'Coming soon!', body: 'The Győr date, venue, and schedule are still being confirmed. Check back for updates.' },
+    tbd: { title: 'Coming soon!', body: 'The Haven Győr date, venue, and schedule are still being confirmed. Check back for updates.' },
     days: []
   },
   pastEvents: {

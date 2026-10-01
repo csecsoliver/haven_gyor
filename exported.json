@@ -1,0 +1,116 @@
+{
+  "tagline": [
+    "Game jam for teens 13-18",
+    "Nov 14–15 · Győr"
+  ],
+  "faq": [
+    {
+      "q": "Am I eligible?",
+      "a": [
+        {
+          "text": "If you’re age 13-18, you’re eligible! No prior experience required."
+        }
+      ]
+    },
+    {
+      "q": "Can I organize a Haven?",
+      "a": [
+        {
+          "text": "Absolutely! We’re always looking for passionate organizers. If you’re ready to bring the magic of game development to your community, we’d love to help."
+        }
+      ]
+    },
+    {
+      "q": "Is this free?",
+      "a": [
+        {
+          "text": "Yes! Hack Club is a nonprofit helping teens build technical projects at no cost."
+        }
+      ]
+    },
+    {
+      "q": "Why should I organize a Haven?",
+      "a": [
+        {
+          "text": "You’ll make an impact on your community, whether inspiring someone to make their first game or helping someone find friends in tech. Leading an event is usually very difficult, but we are providing support to help you along the way!"
+        }
+      ]
+    },
+    {
+      "q": "But I’ve never coded before!",
+      "a": [
+        {
+          "text": "Perfect! Game jams are designed for beginners. You’ll have workshops, mentors, and teammates to help you every step of the way."
+        }
+      ]
+    },
+    {
+      "q": "What are the steps to organizing?",
+      "a": [
+        {
+          "text": "First, apply through our organizer form. Then we’ll guide you through venue booking, team building, workshop planning, and day-of coordination."
+        }
+      ]
+    },
+    {
+      "q": "What if my parents are concerned?",
+      "a": [
+        {
+          "text": "We’re here to help! You can see our "
+        },
+        {
+          "text": "parent guide",
+          "href": "https://docs.google.com/document/d/1f_uFvFP4gD01YhXBmU9jBfEBU9QMvr1L5yJTKWBBhbA/edit?usp=sharing"
+        },
+        {
+          "text": " here, or they can reach out to us at "
+        },
+        {
+          "text": "haven@hackclub.com",
+          "href": "mailto:haven@hackclub.com"
+        },
+        {
+          "text": " for questions."
+        }
+      ]
+    },
+    {
+      "q": "Do we get volunteer hours?",
+      "a": [
+        {
+          "text": "Many schools accept organizing hours as community service. If your school requires documentation, we can provide it!"
+        }
+      ]
+    },
+    {
+      "q": "I still have questions!",
+      "a": [
+        {
+          "text": "Join #haven-help on "
+        },
+        {
+          "text": "Slack",
+          "href": "https://hackclub.com/slack/"
+        },
+        {
+          "text": " or reach out to us at "
+        },
+        {
+          "text": "haven@hackclub.com",
+          "href": "mailto:haven@hackclub.com"
+        },
+        {
+          "text": "!"
+        }
+      ]
+    },
+    {
+      "q": "Can I join an organizing team?",
+      "a": [
+        {
+          "text": "Of course! Many cities have organizing teams. Reach out to organizers in your area or apply to join an existing team."
+        }
+      ]
+    }
+  ]
+}

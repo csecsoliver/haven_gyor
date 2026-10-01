@@ -60,6 +60,16 @@ docker run -d --name haven-gyor --restart unless-stopped \
   --env-file .env -p 3000:3000 haven-gyor
 ```
 
+Or use Compose with the same `.env` and managed database:
+
+```sh
+docker compose build
+docker compose run --rm app npm run db:migrate
+docker compose up -d
+# Stop the app:
+docker compose down
+```
+
 The image runs as a non-root user and does not contain your `.env` secrets.
 For a private database CA, mount the certificate read-only and set
 `NODE_EXTRA_CA_CERTS` to its path inside the container. Use an HTTPS reverse

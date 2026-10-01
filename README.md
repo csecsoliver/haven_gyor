@@ -46,6 +46,26 @@ Only database connections are pooled. Database failures return a 503 instead
 of showing stale information. Configure any reverse proxy/CDN to honor
 `Cache-Control: no-store`.
 
+## Run with Docker
+
+Use the same managed PostgreSQL database and private `.env` configuration above.
+`DATABASE_URL` must use a database hostname reachable from the container, not
+`localhost`. Set `ORIGIN` to the public URL (or `http://localhost:3000` locally).
+
+```sh
+docker build -t haven-gyor .
+# Apply migrations explicitly before starting the app; safe to rerun.
+docker run --rm --env-file .env haven-gyor npm run db:migrate
+docker run -d --name haven-gyor --restart unless-stopped \
+  --env-file .env -p 3000:3000 haven-gyor
+```
+
+The image runs as a non-root user and does not contain your `.env` secrets.
+For a private database CA, mount the certificate read-only and set
+`NODE_EXTRA_CA_CERTS` to its path inside the container. Use an HTTPS reverse
+proxy for production; bind the port to `127.0.0.1:3000:3000` if that proxy
+runs on the same host.
+
 ## Import and export
 
 Open `/admin`, enter the token, and paste/upload JSON. The token stays only

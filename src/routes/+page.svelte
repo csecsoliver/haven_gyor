@@ -5,6 +5,7 @@
 
   export let data: { content: SiteContent };
   $: content = data.content;
+  let showOfficialNotice = true;
   const referral = 'https://haven.hack.club/150';
   const asset = (src: string) => src?.startsWith('/images/') ? `https://haven.hackclub.com${src}` : src;
   const safeLink = (href?: string) => href && /^(https:\/\/|mailto:)/i.test(href) ? href : undefined;
@@ -20,6 +21,14 @@
 </svelte:head>
 
 <a class="skip-link" href="#main">Skip to content</a>
+{#if showOfficialNotice}
+  <aside class="official-notice" aria-label="Official website">
+    <button type="button" aria-label="Dismiss official website notice" on:click={() => showOfficialNotice = false}>×</button>
+    <strong>Looking for the official website?</strong>
+    <p>This is an independent Győr community site.</p>
+    <a href="https://haven.hackclub.com">Visit haven.hackclub.com <span aria-hidden="true">↗</span></a>
+  </aside>
+{/if}
 <header class="landing-header">
   <nav aria-label="Main navigation">
     <a href={referral}>{content.nav.signup} <span aria-hidden="true">↗</span></a>

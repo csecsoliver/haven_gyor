@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import pg from 'pg';
 import { defaults } from '$lib/defaults';
-import { mergeContent, overridesSchema, type Overrides } from '$lib/schema';
+import { mergeContent, siteSchema, type Overrides } from '$lib/schema';
 
 let pool: pg.Pool | undefined;
 function database() {
@@ -10,15 +10,13 @@ function database() {
   return pool ??= new pg.Pool({ connectionString: env.DATABASE_URL, max: 5 });
 }
 
-export async function exportContent(): Promise<Overrides> {
+export async function exportContent() {
   const { rows } = await database().query('SELECT haven.export_content() AS content');
-  return overridesSchema.parse(rows[0].content);
+  return siteSchema.parse(rows[0].content);
 }
 
-export async function loadContent() {
-  return mergeContent(defaults, await exportContent());
-}
+export const loadContent = exportContent;
 
 export async function importContent(content: Overrides) {
-  await database().query('SELECT haven.import_content($1::jsonb)', [JSON.stringify(content)]);
+  await database().query('SELECT haven.import_content($1::jsonb)', [JSON.stringify(mergeContent(defaults, content))]);
 }

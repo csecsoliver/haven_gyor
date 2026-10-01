@@ -30,8 +30,10 @@ If your provider uses a private CA, supply its certificate through the Node
 runtime's `NODE_EXTRA_CA_CERTS` environment variable.
 
 The migration uses a transaction and an advisory lock and is safe to rerun.
-It creates only the `haven` schema, its tables, and two functions; existing
-content is retained. The migration role must be able to create schemas/tables/
+It creates the `haven` schema, its tables, and two functions, then seeds all
+content from `src/lib/defaults.ts`. Existing overrides are preserved, including
+explicit empty arrays; missing fields are filled. This seed runs once, tracked
+in `haven.migration`, so rerunning migrations does not overwrite edited content. The migration role must be able to create schemas/tables/
 functions. The same role may be used to run this small application.
 For a separate application role, grant `USAGE` on schema `haven`, `SELECT`
 on its tables, `INSERT, UPDATE, DELETE` on its tables, and `EXECUTE` on
@@ -86,14 +88,16 @@ backup before replacing content.
 - Supports the documented [SITE_DATA](https://github.com/hackclub/haven/blob/main/SITE_DATA.md)
   content fields, plus the FAQ array format supplied for this project.
 - `faq: [...]` is normalized to `faq: { "items": [...] }` in exports.
-- Import **replaces** all overrides atomically; it is not a patch.
-- Omitted object fields inherit locally versioned defaults; arrays replace
-  defaults, and `[]` deliberately clears items.
-- An empty document `{}` resets all fields to local defaults.
+- Import **replaces** all stored content atomically; it is not a patch.
+- Omitted object fields are filled from `defaults.ts` before saving the complete
+  document to the database; arrays replace defaults, and `[]` deliberately clears items.
+- An empty document `{}` resets the database content to defaults.
+- Page loads and exports read complete database content, with no local-default fallback.
+  Run `npm run db:migrate` before starting the app.
 - Default schedule/sponsors are empty rather than claiming unconfirmed times
   or placeholder sponsorships.
-- The supplied Győr tagline and all ten supplied FAQ entries are the local
-  defaults, so the initial empty database already displays them.
+- Migrations populate the database with the supplied Győr tagline, all ten
+  supplied FAQ entries, and every other field in `defaults.ts`.
 - The independent-site notice, city identity, and signup URL cannot be
   changed by importing JSON.
 - No raw HTML rendering. Links must use HTTPS or `mailto:`; image URLs use
@@ -113,9 +117,8 @@ curl -X PUT -H "Authorization: Bearer $ADMIN_TOKEN" \
   -H "Content-Type: application/json" --data-binary @haven-gyor.json \
   http://localhost:5173/api/content
 
-# Export the complete displayed document, including defaults:
-curl -H "Authorization: Bearer $ADMIN_TOKEN" \
-  'http://localhost:5173/api/content?resolved=1' -o haven-gyor-resolved.json
+# Every export includes the complete stored document.
+# The older ?resolved=1 URL remains equivalent.
 ```
 
 ## Storage design

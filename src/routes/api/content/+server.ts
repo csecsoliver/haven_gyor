@@ -1,16 +1,16 @@
 import { error, json } from '@sveltejs/kit';
 import { requireAdmin } from '$lib/server/auth';
-import { exportContent, importContent, loadContent } from '$lib/server/db';
+import { exportContent, importContent } from '$lib/server/db';
 import { overridesSchema } from '$lib/schema';
 import type { RequestHandler } from './$types';
 
 const MAX_BYTES = 1_048_576;
 const headers = { 'cache-control': 'no-store' };
 
-export const GET: RequestHandler = async ({ request, url }) => {
+export const GET: RequestHandler = async ({ request }) => {
   requireAdmin(request);
   try {
-    const content = url.searchParams.get('resolved') === '1' ? await loadContent() : await exportContent();
+    const content = await exportContent();
     return new Response(JSON.stringify(content, null, 2) + '\n', {
       headers: {
         ...headers, 'content-type': 'application/json; charset=utf-8',

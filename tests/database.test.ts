@@ -2,7 +2,9 @@ import { readFile } from 'node:fs/promises';
 import { PGlite } from '@electric-sql/pglite';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { overridesSchema } from '../src/lib/schema';
+import { defaults } from '../src/lib/defaults';
+import { mergeContent, overridesSchema } from '../src/lib/schema';
+import { seedDefaults } from '../scripts/seed.mjs';
 
 // PGlite runs real PostgreSQL/PLpgSQL in memory, without a database service.
 // An optional managed connection MUST point to a disposable test database.
@@ -19,6 +21,7 @@ describe('PostgreSQL import/export', () => {
     const sql = await readFile('db/001_content.sql', 'utf8');
     if (managed) await managed.query(sql);
     else await memory!.exec(sql);
+    await seedDefaults(client);
   };
   beforeAll(async () => {
     if (managed) await managed.connect();
@@ -31,6 +34,19 @@ describe('PostgreSQL import/export', () => {
   const read = async () => (await client.query('SELECT haven.export_content() AS content')).rows[0].content;
   const write = async (value: unknown) => client.query('SELECT haven.import_content($1::jsonb)', [JSON.stringify(value)]);
 
+  it('seeds all defaults and relational FAQ entries on a fresh database', async () => {
+    expect(await read()).toEqual(defaults);
+    expect((await client.query('SELECT count(*)::int AS n FROM haven.faq')).rows[0].n).toBe(defaults.faq.items.length);
+  });
+  it('fills missing defaults in an existing database without replacing custom or empty collections', async () => {
+    const custom = overridesSchema.parse({ hero: { signup: { button: 'Join us' } }, faq: { items: [] } });
+    await write(custom);
+    await client.query("DELETE FROM haven.migration WHERE name = '002_defaults'");
+    await migrate();
+    expect(await read()).toEqual(mergeContent(defaults, custom));
+    await migrate();
+    expect(await read()).toEqual(mergeContent(defaults, custom));
+  });
   it('round-trips ordered FAQ segments, links, marks, and schedule children', async () => {
     const content = overridesSchema.parse({
       tagline: ['teens', 'Győr'],

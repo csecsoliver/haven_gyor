@@ -13,7 +13,7 @@
   }
 
   async function importDocument() {
-    if (!confirm('Replace all stored overrides with this document? Omitted fields will return to local defaults.')) return;
+    if (!confirm('Replace all stored content with this document? Omitted fields will be filled from defaults.')) return;
     busy = true;
     message = '';
     failed = false;
@@ -31,24 +31,24 @@
     } finally { busy = false; }
   }
 
-  async function exportDocument(resolved = false) {
+  async function exportDocument() {
     busy = true;
     message = '';
     failed = false;
     try {
-      const response = await fetch(`/api/content${resolved ? '?resolved=1' : ''}`, {
+      const response = await fetch('/api/content', {
         headers: { authorization: `Bearer ${token}` }, cache: 'no-store'
       });
       if (!response.ok) throw new Error(await responseError(response));
       const json = await response.text();
-      if (!resolved) document = json;
+      document = json;
       const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
       const link = window.document.createElement('a');
       link.href = url;
-      link.download = resolved ? 'haven-gyor-resolved.json' : 'haven-gyor.json';
+      link.download = 'haven-gyor.json';
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      message = resolved ? 'Complete resolved content exported.' : 'Stored overrides exported and loaded into the editor.';
+      message = 'Stored content exported and loaded into the editor.';
     } catch (cause) {
       failed = true;
       message = cause instanceof Error ? cause.message : 'Export failed.';
@@ -81,7 +81,7 @@
   <p>
     Paste the Haven <a href="https://github.com/hackclub/haven/blob/main/SITE_DATA.md">SITE_DATA JSON</a>,
     or upload a file. Both <code>faq: […]</code> and <code>faq: &#123; items: […] &#125;</code>
-    are accepted. Imports replace all overrides; omitted fields use local defaults.
+    are accepted. Imports replace all content; omitted fields are filled from defaults and stored in the database.
     Empty arrays remove their items. The independence notice and referral URL stay fixed.
   </p>
   <label for="token">Admin token</label>
@@ -92,9 +92,8 @@
   <label for="json">JSON document</label>
   <textarea id="json" bind:value={document} spellcheck="false" rows="22" disabled={busy}></textarea>
   <div class="actions">
-    <button onclick={importDocument} disabled={busy || !token}>Replace stored overrides</button>
-    <button onclick={() => exportDocument()} disabled={busy || !token}>Export stored overrides</button>
-    <button onclick={() => exportDocument(true)} disabled={busy || !token}>Export with defaults</button>
+    <button onclick={importDocument} disabled={busy || !token}>Replace stored content</button>
+    <button onclick={exportDocument} disabled={busy || !token}>Export stored content</button>
   </div>
   <p role="status" class:error={failed}>{busy ? 'Working…' : message}</p>
 </main>

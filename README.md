@@ -8,7 +8,7 @@ as a referral link. This app does not collect signup emails.
 
 ## Run with managed PostgreSQL
 
-Use Node 22.18+ and an existing managed PostgreSQL database (PostgreSQL 14+).
+Use Node 26.10.0 and an existing managed PostgreSQL database (PostgreSQL 14+).
 No local PostgreSQL server or Docker is required.
 
 ```sh
@@ -53,7 +53,7 @@ Use the same managed PostgreSQL database and private `.env` configuration above.
 `localhost`. Set `ORIGIN` to the public URL (or `http://localhost:3000` locally).
 
 ```sh
-docker build -t haven-gyor .
+docker build --pull -t haven-gyor .
 # Apply migrations explicitly before starting the app; safe to rerun.
 docker run --rm --env-file .env haven-gyor npm run db:migrate
 docker run -d --name haven-gyor --restart unless-stopped \
@@ -63,13 +63,14 @@ docker run -d --name haven-gyor --restart unless-stopped \
 Or use Compose with the same `.env` and managed database:
 
 ```sh
-docker compose build
+docker compose build --pull
 docker compose run --rm app npm run db:migrate
 docker compose up -d
 # Stop the app:
 docker compose down
 ```
 
+Both Docker stages use Node 26.10.0 on Debian Trixie slim.
 The image runs as a non-root user and does not contain your `.env` secrets.
 For a private database CA, mount the certificate read-only and set
 `NODE_EXTRA_CA_CERTS` to its path inside the container. Use an HTTPS reverse

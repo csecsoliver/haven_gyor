@@ -63,6 +63,24 @@ describe('PostgreSQL import/export', () => {
     await write({});
     expect(await read()).toEqual({});
   });
+  it('exports directly inserted children without section markers', async () => {
+    for (const base of [{}, { schedule: { heading: 'Plan' }, faq: { heading: 'Questions' } }]) {
+      await write(base);
+      await client.query("INSERT INTO haven.schedule_day (position, label) VALUES (0, 'Saturday')");
+      await client.query("INSERT INTO haven.schedule_item (day_position, position, time, title) VALUES (0, 0, '10:00', 'Doors')");
+      await client.query("INSERT INTO haven.faq (position, question) VALUES (0, 'Where?')");
+      await client.query("INSERT INTO haven.faq_segment (faq_position, position, text) VALUES (0, 0, 'Győr')");
+      const content = overridesSchema.parse(await read());
+      expect(content.schedule).toEqual({
+        ...('schedule' in base ? base.schedule : {}),
+        days: [{ day: 'Saturday', items: [{ time: '10:00', title: 'Doors' }] }]
+      });
+      expect(content.faq).toEqual({
+        ...('faq' in base ? base.faq : {}),
+        items: [{ q: 'Where?', a: [{ text: 'Győr' }] }]
+      });
+    }
+  });
   it('is idempotent to migrate and does not erase content', async () => {
     await write({ tagline: ['keep me'] });
     await migrate();

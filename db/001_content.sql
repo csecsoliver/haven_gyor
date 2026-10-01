@@ -134,7 +134,7 @@ DECLARE document jsonb;
 BEGIN
   -- One SELECT gives a single consistent snapshot of all ordered child tables.
   SELECT coalesce(jsonb_object_agg(s.name, CASE
-    WHEN s.name = 'faq' AND s.value ? 'items' THEN
+    WHEN s.name = 'faq' AND (s.value ? 'items' OR EXISTS (SELECT 1 FROM haven.faq)) THEN
       jsonb_set(s.value, '{items}', (
         SELECT coalesce(jsonb_agg(jsonb_build_object('q', f.question, 'a', (
           SELECT coalesce(jsonb_agg(jsonb_strip_nulls(jsonb_build_object(
@@ -143,7 +143,7 @@ BEGIN
           FROM haven.faq_segment a WHERE a.faq_position = f.position
         )) ORDER BY f.position), '[]'::jsonb) FROM haven.faq f
       ))
-    WHEN s.name = 'schedule' AND s.value ? 'days' THEN
+    WHEN s.name = 'schedule' AND (s.value ? 'days' OR EXISTS (SELECT 1 FROM haven.schedule_day)) THEN
       jsonb_set(s.value, '{days}', (
         SELECT coalesce(jsonb_agg(jsonb_build_object('day', d.label, 'items', (
           SELECT coalesce(jsonb_agg(jsonb_strip_nulls(jsonb_build_object(
@@ -153,7 +153,17 @@ BEGIN
         )) ORDER BY d.position), '[]'::jsonb) FROM haven.schedule_day d
       ))
     ELSE s.value END), '{}'::jsonb)
-  INTO document FROM haven.section s;
+  INTO document FROM (
+    SELECT name, value FROM haven.section
+    UNION ALL
+    SELECT 'schedule', '{}'::jsonb
+    WHERE EXISTS (SELECT 1 FROM haven.schedule_day)
+      AND NOT EXISTS (SELECT 1 FROM haven.section WHERE name = 'schedule')
+    UNION ALL
+    SELECT 'faq', '{}'::jsonb
+    WHERE EXISTS (SELECT 1 FROM haven.faq)
+      AND NOT EXISTS (SELECT 1 FROM haven.section WHERE name = 'faq')
+  ) s;
   RETURN document;
 END;
 $$;

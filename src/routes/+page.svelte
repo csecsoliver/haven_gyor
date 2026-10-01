@@ -41,7 +41,7 @@
       </a>
       <p class="landing-referral">Referral signup · <a href={referral}>haven.hack.club/150</a></p>
       <p class="landing-disclaimer">
-        Independent Győr community website.<br />
+        Independent Haven Győr community website.<br />
         <strong>Not run by Hack Club HQ.</strong>
       </p>
     </div>
@@ -101,7 +101,7 @@
   {#if content.faq.items.length}
   <section id="faq" class="section faq">
     <div class="section-heading"><p class="eyebrow">Good questions, straight answers</p><h2>{content.faq.heading}</h2></div>
-    <p class="referral-note">Answers adapted from the original Haven page. “We” refers to Haven’s organizers, not this website’s independent maintainer.</p>
+    <p class="referral-note">Answers adapted from the original Haven page. “We” refers to Haven Győr’s organizers.</p>
     <div class="faq-list">{#each content.faq.items as item}<details><summary>{item.q}<span aria-hidden="true">+</span></summary><div class="answer"><RichText segments={item.a} /></div></details>{/each}</div>
     <div class="final-cta"><h3>Your first game starts with a hello.</h3><a class="button" href={referral}>{content.faq.cta} ↗</a><p class="referral-note">This is a referral link to haven.hack.club/150.</p></div>
   </section>

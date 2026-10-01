@@ -403,8 +403,7 @@ a:hover {
   gap: 65px;
   padding: 70px max(32px, calc((100vw - 1056px) / 2)) 150px;
   background: #e8dec3
-    url("https://haven.hackclub.com/images/footer/bottom-bushes.webp") center
-    bottom/auto 100px repeat-x;
+    url("/images/footer/bottom-bushes.webp") center bottom/auto 100px repeat-x;
   border-top: 1px solid #c9b58c;
 }
 .footer-brand img {

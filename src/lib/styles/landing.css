@@ -216,11 +216,10 @@
 .landing-mascot {
   position: absolute;
   right: clamp(2rem, 8vw, 10rem);
-  bottom: 13%;
+  bottom: 0;
   z-index: 1;
   width: min(clamp(150px, 23vw, 330px), 35svh);
   height: auto;
-  transform: rotate(5deg);
   filter: drop-shadow(0 15px 12px #4e481c40);
   pointer-events: none;
 }
@@ -264,7 +263,6 @@
   .landing-mascot {
     right: 3%;
     width: min(21vw, 35svh);
-    bottom: 15%;
   }
 }
 

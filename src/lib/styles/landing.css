@@ -348,6 +348,11 @@
     max-width: min(260px, 30svh);
   }
 
+  .landing-title .landing-jedlik-logo {
+    width: clamp(88px, 26vw, 140px);
+    max-width: 28%;
+  }
+
   .landing-title span {
     padding: .4em 0 0;
     font-size: min(clamp(3rem, 12vw, 5rem), 10svh);

@@ -55,6 +55,9 @@
         {content.hero.signup.button} <span aria-hidden="true">↗</span>
       </a>
       <p class="landing-referral">Referral signup · <a href={referral}>haven.hack.club/150</a></p>
+      <p class="landing-referral landing-instagram">
+        Follow us on Instagram · <a href="https://www.instagram.com/haven.gyor.hackclub/">@haven.gyor.hackclub</a>
+      </p>
       <p class="landing-disclaimer">
         Independent Haven Győr community website.<br />
         <strong>Not run by Hack Club HQ.</strong>

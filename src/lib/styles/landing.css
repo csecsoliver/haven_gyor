@@ -217,6 +217,31 @@
   color: white;
 }
 
+.landing-instagram {
+  width: fit-content;
+  max-width: 100%;
+  padding: .65rem 1rem;
+  border: 1px solid #ffe9b7;
+  border-radius: 12px;
+  background: #462b27e6;
+  box-shadow: 0 3px 12px #462b2733;
+  color: #fff3c6;
+  font-size: .95rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  text-shadow: none;
+}
+
+.landing-instagram a {
+  color: #ffe382;
+  font-weight: 700;
+  text-underline-offset: .2em;
+}
+
+.landing-instagram a:hover {
+  color: white;
+}
+
 .landing-disclaimer {
   width: fit-content;
   margin: clamp(.5rem, 2svh, 1.5rem) 0 0 1rem;
@@ -350,6 +375,10 @@
     font-size: .8rem;
   }
 
+  .landing-instagram {
+    margin-inline: auto;
+  }
+
   .landing-disclaimer {
     margin: clamp(.5rem, 2svh, 1.5rem) auto 0;
     text-align: left;
@@ -374,5 +403,6 @@
   .landing-venue { grid-column: 1; grid-row: 4; }
   .landing-signup { grid-column: 2; grid-row: 1; justify-self: start; }
   .landing-referral { grid-column: 2; grid-row: 2; }
-  .landing-disclaimer { grid-column: 2; grid-row: 3; }
+  .landing-instagram { grid-column: 2; grid-row: 3; }
+  .landing-disclaimer { grid-column: 2; grid-row: 4; }
 }

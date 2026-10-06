@@ -45,6 +45,14 @@
         <span>Győr</span>
       </h1>
       <div class="landing-tagline">{#each content.tagline as line}<p>{line}</p>{/each}</div>
+      <a class="landing-venue" href="https://jedlik.eu/" aria-label="Venue: Jedlik — visit the school website">
+        <img
+          src="https://jedlik.eu/_next/image?url=https%3A%2F%2Fgyor-jedlik.cms.intezmeny.edir.hu%2Fuploads%2Fthumbnail_Jedlik_logo_2020_200_3c5beeccf8.png&w=256&q=90"
+          alt="Jedlik logo"
+        />
+        <span><small>Venue</small><strong>Jedlik</strong></span>
+        <span aria-hidden="true">↗</span>
+      </a>
       <a class="landing-signup" href={referral}>
         {content.hero.signup.button} <span aria-hidden="true">↗</span>
       </a>

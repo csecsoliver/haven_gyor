@@ -47,7 +47,6 @@
           src="https://jedlik.eu/_next/image?url=https%3A%2F%2Fgyor-jedlik.cms.intezmeny.edir.hu%2Fuploads%2Fthumbnail_Jedlik_logo_2020_200_3c5beeccf8.png&w=256&q=90"
           alt="Jedlik venue logo"
         />
-        <span class="landing-city">Győr</span>
       </h1>
       <div class="landing-tagline">{#each content.tagline as line}<p>{line}</p>{/each}</div>
       <a class="landing-signup" href={referral}>

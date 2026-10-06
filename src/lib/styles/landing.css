@@ -179,11 +179,6 @@
   object-fit: contain;
 }
 
-.landing-title .landing-city {
-  flex-basis: 100%;
-  padding: 0;
-}
-
 
 .landing-signup {
   display: inline-flex;

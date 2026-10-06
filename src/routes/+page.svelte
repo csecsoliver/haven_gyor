@@ -42,15 +42,14 @@
     <div class="landing-content">
       <h1 id="hero-title" class="landing-title">
         <img src={asset('/images/logo.webp')} alt="Hack Club Haven" width="762" height="491" fetchpriority="high" />
-        <span>Győr</span>
-      </h1>
-      <div class="landing-tagline">{#each content.tagline as line}<p>{line}</p>{/each}</div>
-      <div class="landing-venue">
-        <img
+        <span class="landing-brand-cross" aria-label="with">×</span>
+        <img class="landing-jedlik-logo"
           src="https://jedlik.eu/_next/image?url=https%3A%2F%2Fgyor-jedlik.cms.intezmeny.edir.hu%2Fuploads%2Fthumbnail_Jedlik_logo_2020_200_3c5beeccf8.png&w=256&q=90"
           alt="Jedlik venue logo"
         />
-      </div>
+        <span class="landing-city">Győr</span>
+      </h1>
+      <div class="landing-tagline">{#each content.tagline as line}<p>{line}</p>{/each}</div>
       <a class="landing-signup" href={referral}>
         {content.hero.signup.button} <span aria-hidden="true">↗</span>
       </a>

@@ -64,9 +64,11 @@ it('renders empty fields as placeholders, never as empty cells or links', () => 
 
 it('keeps the site layout shell around the leaderboard', () => {
   const { body } = render(Page, { props: { data: { leaderboard } } });
-  expect(body).toContain('landing-hero');
-  expect(body).toContain('site-footer');
-  expect(body).toContain('Looking for the official website?');
+  const html = strip(body);
+  expect(html).toContain('landing-hero');
+  expect(html).toContain('site-footer');
+  expect(html).toContain('Looking for the official website?');
+  expect(html).not.toContain('loaded live from the database');
 });
 
 it('has no signup CTA or referral disclaimers; a scroll-down button takes its place', () => {

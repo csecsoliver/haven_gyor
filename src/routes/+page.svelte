@@ -59,7 +59,6 @@
     <div class="section-heading">
       <p class="eyebrow">Project leaderboard</p>
       <h2 id="leaderboard-title">Leaderboard</h2>
-      <p class="intro">Projects ranked by the community, loaded live from the database.</p>
     </div>
     {#if data.leaderboard.length}
       <div class="leaderboard-grid">

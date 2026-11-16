@@ -66,6 +66,27 @@ export const siteSchema = z.strictObject({
 export type SiteContent = z.infer<typeof siteSchema>;
 export type RichText = z.infer<typeof rich>;
 
+const email = z.string().max(320).refine(
+  // Empty is allowed (the column is NOT NULL, but '' is still possible); a
+  // non-empty value must be a plain address so it is safe to link via mailto:.
+  (value) => value === '' || /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/u.test(value),
+  'Use a plain email address without spaces or quotes'
+);
+
+// Rows of the haven.leaderboard table (db/002_leaderboard.sql), with the
+// project's authors from haven.authors joined on.
+export const leaderboardAuthor = z.strictObject({ name: text, email });
+export const leaderboardEntry = z.strictObject({
+  id: z.uuid(),
+  rank: z.number().int(),
+  name: text,
+  url: z.string().max(2048),
+  source_url: z.string().max(2048),
+  authors: z.array(leaderboardAuthor).max(100)
+});
+export const leaderboardSchema = z.array(leaderboardEntry).max(100000);
+export type LeaderboardEntry = z.infer<typeof leaderboardEntry>;
+
 export const overridesSchema = z.strictObject({
   meta: meta.partial().optional(),
   nav: nav.partial().optional(),

@@ -1,12 +1,12 @@
 import { error } from '@sveltejs/kit';
-import { loadContent } from './db';
+import { loadLeaderboard } from './db';
 
 export async function loadPage(setHeaders: (headers: Record<string, string>) => void) {
   setHeaders({ 'cache-control': 'no-store' });
   try {
-    return { content: await loadContent() };
+    return { leaderboard: await loadLeaderboard() };
   } catch (cause) {
-    console.error('Could not load Haven content:', cause);
-    error(503, 'Event information is temporarily unavailable. Please try again shortly.');
+    console.error('Could not load the leaderboard:', cause);
+    error(503, 'The leaderboard is temporarily unavailable. Please try again shortly.');
   }
 }

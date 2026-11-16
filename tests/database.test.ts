@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { PGlite } from '@electric-sql/pglite';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -18,9 +18,12 @@ describe('PostgreSQL import/export', () => {
       : memory!.query<Record<string, unknown>>(sql, params)
   };
   const migrate = async () => {
-    const sql = await readFile('db/001_content.sql', 'utf8');
-    if (managed) await managed.query(sql);
-    else await memory!.exec(sql);
+    const files = (await readdir('db')).filter((name) => name.endsWith('.sql')).sort();
+    for (const name of files) {
+      const sql = await readFile(`db/${name}`, 'utf8');
+      if (managed) await managed.query(sql);
+      else await memory!.exec(sql);
+    }
     await seedDefaults(client);
   };
   beforeAll(async () => {
@@ -101,5 +104,56 @@ describe('PostgreSQL import/export', () => {
     await write({ tagline: ['keep me'] });
     await migrate();
     expect(await read()).toEqual({ tagline: ['keep me'] });
+  });
+  it('creates haven.leaderboard and haven.authors with uuid ids, NOT NULL columns, and a nullable project_id FK', async () => {
+    await client.query(
+      "INSERT INTO haven.leaderboard (rank, name, url, source_url) VALUES (1, 'Alpha', 'https://alpha.example', 'https://github.com/example/alpha')"
+    );
+    const { rows } = await client.query('SELECT id, rank, name, url, source_url FROM haven.leaderboard ORDER BY rank, name, id');
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ rank: 1, name: 'Alpha', url: 'https://alpha.example', source_url: 'https://github.com/example/alpha' });
+    expect(rows[0].id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+
+    // project_id is nullable; the other authors columns are not.
+    await client.query("INSERT INTO haven.authors (name, email) VALUES ('Ada', 'ada@example.com')");
+    await client.query('INSERT INTO haven.authors (name, email, project_id) VALUES ($1, $2, $3)', ['Cleo', 'cleo@example.com', rows[0].id]);
+    await expect(client.query("INSERT INTO haven.authors (email, project_id) VALUES ('x@example.com', NULL)")).rejects.toThrow();
+    await expect(client.query('INSERT INTO haven.authors (name, project_id) VALUES ($1, NULL)', ['No email'])).rejects.toThrow();
+    // project_id must reference an existing leaderboard entry.
+    await expect(client.query("INSERT INTO haven.authors (name, email, project_id) VALUES ('Bob', 'bob@example.com', '99999999-9999-4999-8999-999999999999')")).rejects.toThrow();
+    // leaderboard columns are all NOT NULL.
+    await expect(client.query("INSERT INTO haven.leaderboard (name, url) VALUES ('No source', 'https://x.example')")).rejects.toThrow();
+    await expect(client.query("INSERT INTO haven.leaderboard (name, source_url) VALUES ('No url', 'https://x.example')")).rejects.toThrow();
+    await expect(client.query("INSERT INTO haven.leaderboard (url, source_url) VALUES ('https://x.example', 'https://x.example')")).rejects.toThrow();
+    await expect(client.query("INSERT INTO haven.leaderboard (name, url, source_url) VALUES ('No rank', 'https://x.example', 'https://x.example')")).rejects.toThrow();
+    // The FK has no ON DELETE action: a referenced project cannot be deleted.
+    await expect(client.query('DELETE FROM haven.leaderboard WHERE id = $1', [rows[0].id])).rejects.toThrow();
+
+    await client.query('DELETE FROM haven.authors');
+    await client.query('DELETE FROM haven.leaderboard');
+  });
+  it('joins authors with name and email onto leaderboard rows in one query', async () => {
+    await client.query(
+      "INSERT INTO haven.leaderboard (rank, name, url, source_url) VALUES (1, 'Joined', 'https://j.example', 'https://s.example')"
+    );
+    const [{ id }] = (await client.query("SELECT id FROM haven.leaderboard WHERE name = 'Joined'")).rows;
+    await client.query('INSERT INTO haven.authors (name, email, project_id) VALUES ($1, $2, $3), ($4, $5, $3)', ['Zoe', 'zoe@example.com', id, 'Al', 'al@example.com']);
+    await client.query("INSERT INTO haven.authors (name, email) VALUES ('Detached', 'detached@example.com')");
+    const { rows } = await client.query(`
+      SELECT l.id, l.rank, l.name, l.url, l.source_url,
+             coalesce(json_agg(jsonb_build_object('name', a.name, 'email', a.email) ORDER BY a.name)
+                      FILTER (WHERE a.id IS NOT NULL), '[]') AS authors
+      FROM haven.leaderboard l
+      LEFT JOIN haven.authors a ON a.project_id = l.id
+      GROUP BY l.id
+      ORDER BY l.rank, l.name, l.id
+    `);
+    const joined = rows.find((r) => r.name === 'Joined');
+    expect(joined.authors).toEqual([
+      { name: 'Al', email: 'al@example.com' },
+      { name: 'Zoe', email: 'zoe@example.com' }
+    ]);
+    await client.query('DELETE FROM haven.authors');
+    await client.query('DELETE FROM haven.leaderboard');
   });
 });

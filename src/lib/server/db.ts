@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import pg from 'pg';
 import { defaults } from '$lib/defaults';
-import { mergeContent, siteSchema, type Overrides } from '$lib/schema';
+import { leaderboardSchema, mergeContent, siteSchema, type LeaderboardEntry, type Overrides } from '$lib/schema';
 
 let pool: pg.Pool | undefined;
 function database() {
@@ -15,7 +15,18 @@ export async function exportContent() {
   return siteSchema.parse(rows[0].content);
 }
 
-export const loadContent = exportContent;
+export async function loadLeaderboard(): Promise<LeaderboardEntry[]> {
+  const { rows } = await database().query(`
+    SELECT l.id, l.rank, l.name, l.url, l.source_url,
+           coalesce(json_agg(jsonb_build_object('name', a.name, 'email', a.email) ORDER BY a.name)
+                    FILTER (WHERE a.id IS NOT NULL), '[]') AS authors
+    FROM haven.leaderboard l
+    LEFT JOIN haven.authors a ON a.project_id = l.id
+    GROUP BY l.id
+    ORDER BY l.rank, l.name, l.id
+  `);
+  return leaderboardSchema.parse(rows);
+}
 
 export async function importContent(content: Overrides) {
   await database().query('SELECT haven.import_content($1::jsonb)', [JSON.stringify(mergeContent(defaults, content))]);

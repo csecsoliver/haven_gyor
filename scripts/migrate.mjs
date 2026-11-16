@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import pg from 'pg';
 import { seedDefaults } from './seed.mjs';
 
@@ -6,9 +6,13 @@ if (!process.env.DATABASE_URL) throw new Error('Set DATABASE_URL before running 
 const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
 try {
   await client.connect();
-  await client.query(await readFile(new URL('../db/001_content.sql', import.meta.url), 'utf8'));
+  const dir = new URL('../db/', import.meta.url);
+  const files = (await readdir(dir)).filter((name) => name.endsWith('.sql')).sort();
+  for (const name of files) {
+    await client.query(await readFile(new URL(name, dir), 'utf8'));
+  }
   await seedDefaults(client);
-  console.log('Haven schema and default content are ready.');
+  console.log('Database schema and default content are ready.');
 } finally {
   await client.end();
 }

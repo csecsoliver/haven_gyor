@@ -55,6 +55,42 @@ it('rejects malformed leaderboard rows instead of serving them', async () => {
   }
 });
 
+it('keeps the top three in rank order and shuffles the rest on every load', async () => {
+  const rows = [1, 2, 3, 4, 5, 6, 7].map((rank) => ({
+    id: `00000000-0000-4000-8000-00000000000${rank}`,
+    rank,
+    name: `P${rank}`,
+    url: 'https://x.example',
+    source_url: 'https://s.example',
+    authors: []
+  }));
+  query.mockResolvedValueOnce({ rows });
+  const { leaderboard } = await loadPage(vi.fn());
+  expect(leaderboard.slice(0, 3).map((e) => e.rank)).toEqual([1, 2, 3]);
+  expect(leaderboard.slice(3).map((e) => e.rank).sort((a, b) => a - b)).toEqual([4, 5, 6, 7]);
+  expect(new Set(leaderboard.map((e) => e.id)).size).toBe(7);
+});
+
+it('shuffles the tail deterministically when Math.random is mocked', async () => {
+  const rows = [4, 5, 6, 7].map((rank) => ({
+    id: `00000000-0000-4000-8000-00000000000${rank}`,
+    rank,
+    name: `P${rank}`,
+    url: 'https://x.example',
+    source_url: 'https://s.example',
+    authors: []
+  }));
+  query.mockResolvedValueOnce({ rows });
+  // Fisher-Yates with random() === 0 swaps each i with index 0: [4,5,6,7] -> [5,6,7,4]
+  const random = vi.spyOn(Math, 'random').mockReturnValue(0);
+  try {
+    const { leaderboard } = await loadPage(vi.fn());
+    expect(leaderboard.map((e) => e.rank)).toEqual([5, 6, 7, 4]);
+  } finally {
+    random.mockRestore();
+  }
+});
+
 it('serves rows with empty string fields instead of failing the page', async () => {
   const row = { id: '33333333-3333-4333-8333-333333333333', rank: 3, name: '', url: '', source_url: '', authors: [{ name: 'No Email', email: '' }] };
   query.mockResolvedValueOnce({ rows: [row] });

@@ -4,7 +4,6 @@
 
   let { data }: { data: { leaderboard: LeaderboardEntry[] } } = $props();
   let showOfficialNotice = $state(true);
-  const referral = 'https://haven.hack.club/150';
   // Only http(s) URLs become links; anything else is shown as plain text.
   const safeUrl = (url: string) => (/^https?:\/\//i.test(url) ? url : undefined);
   // Empty/whitespace-only fields render as a placeholder, never as empty cells.
@@ -30,7 +29,6 @@
 {/if}
 <header class="landing-header">
   <nav aria-label="Main navigation">
-    <a href={referral}>Sign up <span aria-hidden="true">↗</span></a>
     <a href="#leaderboard">Leaderboard</a>
   </nav>
 </header>
@@ -47,22 +45,14 @@
         />
       </h1>
       <div class="landing-tagline"><p>The Győr project leaderboard</p></div>
-      <a class="landing-signup" href={referral}>
-        Sign up <span aria-hidden="true">↗</span>
+      <a class="landing-scroll-cta" href="#leaderboard">
+        See the leaderboard <span aria-hidden="true">↓</span>
       </a>
-      <p class="landing-referral">Referral signup · <a href={referral}>haven.hack.club/150</a></p>
       <p class="landing-referral landing-instagram">
         Follow us on Instagram · <a href="https://www.instagram.com/haven.gyor.hackclub/">@haven.gyor.hackclub</a>
       </p>
-      <p class="landing-disclaimer">
-        Independent Haven Győr community website.<br />
-        <strong>Not run by Hack Club HQ.</strong>
-      </p>
     </div>
     <img class="landing-mascot" src="https://haven.hackclub.com/images/hedgehog.webp" alt="" aria-hidden="true" width="600" height="600" />
-    <a class="landing-scroll" href="#leaderboard">
-      See the leaderboard<span aria-hidden="true">↓</span>
-    </a>
   </section>
 
   <section id="leaderboard" class="section leaderboard-section" aria-labelledby="leaderboard-title">
@@ -101,10 +91,39 @@
 
 <footer class="site-footer">
   <div class="footer-brand"><img src="https://haven.hackclub.com/images/haven-logo-color.webp" alt="Haven" loading="lazy" /><p>Made for curious people in Győr.</p></div>
-  <div class="footer-copy"><p class="footer-disclaimer"><strong>Independent community website — not run by Hack Club HQ.</strong> All signup buttons use our referral link: <a href={referral}>https://haven.hack.club/150</a>.</p></div>
+  <div class="footer-copy"><p class="footer-disclaimer"><strong>Independent community website — not run by Hack Club HQ.</strong></p></div>
 </footer>
 
 <style>
+  /* Scroll-down hint in place of the old signup button. */
+  .landing-scroll-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: 1rem;
+    padding: 0.9rem 1.8rem;
+    border: 2px solid #ffe9b7;
+    border-radius: 14px;
+    background: #462b27e6;
+    box-shadow: 0 4px 0 #2c1d19;
+    color: #fff3c6;
+    font-family: 'Jua Extras', 'Jua', sans-serif;
+    font-size: 1.7rem;
+    text-decoration: none;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .landing-scroll-cta:hover {
+    transform: translateY(-2px);
+    background: #462b27;
+    color: white;
+  }
+  @media (max-width: 700px) {
+    .landing-scroll-cta {
+      margin-left: 0;
+      padding: 0.85rem 1.5rem;
+      font-size: 1.5rem;
+    }
+  }
   .leaderboard-section {
     max-width: 1120px;
   }

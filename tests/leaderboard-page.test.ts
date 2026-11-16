@@ -69,6 +69,19 @@ it('keeps the site layout shell around the leaderboard', () => {
   expect(body).toContain('Looking for the official website?');
 });
 
+it('has no signup CTA or referral disclaimers; a scroll-down button takes its place', () => {
+  const { body } = render(Page, { props: { data: { leaderboard } } });
+  const html = strip(body);
+  expect(html).not.toContain('landing-signup');
+  expect(html).not.toContain('Sign up');
+  expect(html).not.toContain('haven.hack.club/150');
+  expect(html).not.toContain('landing-disclaimer');
+  expect(html).not.toContain('class="landing-scroll"');
+  expect(html).toContain('class="landing-scroll-cta');
+  expect(html).toContain('href="#leaderboard"');
+  expect(html).toContain('See the leaderboard');
+});
+
 it('shows an empty state when the leaderboard has no rows', () => {
   const { body } = render(Page, { props: { data: { leaderboard: [] } } });
   expect(body).toContain('No projects on the leaderboard yet.');

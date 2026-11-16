@@ -9,6 +9,8 @@
   const safeUrl = (url: string) => (/^https?:\/\//i.test(url) ? url : undefined);
   // Empty/whitespace-only fields render as a placeholder, never as empty cells.
   const orDash = (value: string) => (value.trim() ? value : '—');
+  // Only the top three placings are displayed.
+  const ordinal = (n: number) => `${n}${n === 1 ? 'st' : n === 2 ? 'nd' : 'rd'}`;
 </script>
 
 <svelte:head>
@@ -70,48 +72,27 @@
       <p class="intro">Projects ranked by the community, loaded live from the database.</p>
     </div>
     {#if data.leaderboard.length}
-      <table class="leaderboard">
-        <thead>
-          <tr>
-            <th scope="col">Rank</th>
-            <th scope="col">Project</th>
-            <th scope="col">Authors</th>
-            <th scope="col">Link</th>
-            <th scope="col">Source</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each data.leaderboard as entry (entry.id)}
-            {@const href = safeUrl(entry.url)}
-            {@const sourceHref = safeUrl(entry.source_url)}
-            <tr>
-              <td class="rank">{entry.rank}</td>
-              <td class="name">{orDash(entry.name)}</td>
-              <td class="authors">
-                {#if entry.authors.length}
-                  {#each entry.authors as author, j}
-                    {#if j > 0}, {/if}{orDash(author.name)}{#if author.email} <a class="email" href="mailto:{author.email}">{author.email}</a>{/if}
-                  {/each}
-                {:else}—{/if}
-              </td>
-              <td class="link">
-                {#if href}
-                  <a href={href} target="_blank" rel="noopener noreferrer">{entry.url}</a>
-                {:else}
-                  {orDash(entry.url)}
-                {/if}
-              </td>
-              <td class="link">
-                {#if sourceHref}
-                  <a href={sourceHref} target="_blank" rel="noopener noreferrer">{entry.source_url}</a>
-                {:else}
-                  {orDash(entry.source_url)}
-                {/if}
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+      <div class="leaderboard-grid">
+        {#each data.leaderboard as entry (entry.id)}
+          {@const href = safeUrl(entry.url)}
+          {@const sourceHref = safeUrl(entry.source_url)}
+          <article class="card">
+            {#if entry.rank <= 3}<span class="placing">{ordinal(entry.rank)}</span>{/if}
+            <h3 class="name">{orDash(entry.name)}</h3>
+            <p class="authors">
+              {#if entry.authors.length}
+                {#each entry.authors as author, j}
+                  {#if j > 0}, {/if}{orDash(author.name)}{#if author.email} <a class="email" href="mailto:{author.email}">{author.email}</a>{/if}
+                {/each}
+              {:else}—{/if}
+            </p>
+            <div class="links">
+              <p><span class="label">Link</span> {#if href}<a href={href} target="_blank" rel="noopener noreferrer">{entry.url}</a>{:else}{orDash(entry.url)}{/if}</p>
+              <p><span class="label">Source</span> {#if sourceHref}<a href={sourceHref} target="_blank" rel="noopener noreferrer">{entry.source_url}</a>{:else}{orDash(entry.source_url)}{/if}</p>
+            </div>
+          </article>
+        {/each}
+      </div>
     {:else}
       <p class="empty">No projects on the leaderboard yet.</p>
     {/if}
@@ -127,54 +108,62 @@
   .leaderboard-section {
     max-width: 1120px;
   }
-  .leaderboard {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+  /* Cards sit next to each other on wide screens and wrap on narrow ones. */
+  .leaderboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+  }
+  .card {
+    position: relative;
+    padding: 28px 24px 24px;
     background: #fff9ea;
     border: 2px solid #c2a17b;
     border-radius: 14px;
-    overflow: hidden;
     box-shadow: 6px 6px 0 #e3d5b9;
   }
-  .leaderboard th,
-  .leaderboard td {
-    text-align: left;
-    padding: 16px 20px;
-  }
-  .leaderboard thead th {
+  .placing {
+    position: absolute;
+    top: -16px;
+    left: -12px;
+    padding: 4px 14px;
+    background: var(--red);
+    color: #fff8e9;
+    border: 2px solid #8f2825;
+    border-radius: 999px;
+    box-shadow: 2px 3px 0 #792825;
     font-family: 'Patrick Hand', cursive;
-    font-weight: 400;
-    font-size: 1.3rem;
-    background: #f3e9d2;
-    border-bottom: 2px solid #c2a17b;
-  }
-  .leaderboard tbody tr + tr td {
-    border-top: 1px dashed #c9b695;
-  }
-  .rank {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 1.4rem;
-    color: var(--red);
-    width: 90px;
+    font-size: 1.2rem;
   }
   .name {
-    font-weight: 600;
+    font-family: 'Patrick Hand', cursive;
+    font-weight: 400;
+    font-size: 1.9rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
   }
   .authors {
+    margin-top: 8px;
     color: #6b5847;
   }
-  .link a {
+  .links {
+    margin-top: 16px;
+    display: grid;
+    gap: 6px;
+  }
+  .links p {
     overflow-wrap: anywhere;
+  }
+  .label {
+    margin-right: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #885c48;
   }
   .empty {
     text-align: center;
     font-size: 1.1rem;
-  }
-  @media (max-width: 760px) {
-    .leaderboard th,
-    .leaderboard td {
-      padding: 12px;
-    }
   }
 </style>
